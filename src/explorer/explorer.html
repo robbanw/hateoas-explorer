@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="masthead">
+    <h3 class="text-muted"><a href="" ng-click="explorer.goToHome()">HATEOAS Explorer</a> - {{url}}</h3>
+    <h4 class="text-success">Status: {{status}}</h4>
+  </div>
+</div>
+
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h1 class="text-muted">Response</h1>
+      <tabset>
+        <tab heading="Parsed">
+          <h2 ng-show="explorer.options.arr.length" class="text-muted">What am I allowed to do?</h2>
+          <ul ng-show="explorer.options.arr.length" class="list-inline">
+            <li ng-repeat="option in explorer.options.arr"><button ng-click="explorer.getAction(option)" ng-class="explorer.getLabel(option)">{{option}}</button></h2></li>
+          </ul>
+
+          <h2 class="text-muted">Where to go next?</h2>
+
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>Links in the response object</strong></div>
+
+            <div class="panel-body" ng-show="!data.links.length"><p>No links in the response object...</p></div>
+
+            <table ng-show="data.links.length"  class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Relation</th>
+                  <th>URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="cursor: pointer;" ng-repeat="link in data.links" ng-click="explorer.follow(link.href)"><td>{{link.rel}}</td><td>{{link.href}}</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading"><strong>Linked objects in the response body</strong></div>
+
+            <div ng-show="!explorer.linkedObjs.length" class="panel-body"><p>No linked objects in the response body...</p></div>
+
+            <table ng-show="explorer.linkedObjs.length" class="table table-hover">
+              <thead>
+                <tr>
+                  <th>URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="cursor: pointer;" ng-repeat="object in explorer.linkedObjs" ng-click="explorer.follow(object.url)" popover-title="Raw object" popover="{{object.raw}}" popover-trigger="mouseenter">
+                  <td>{{object.url}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </tab>
+        <tab heading="Raw">
+          <h2 class="text-muted">Headers</h2>
+          <pre>{{rawHeaders}}</pre>
+          <h2 class="text-muted">Body</h2>
+          <pre>{{raw}}</pre>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+</div>

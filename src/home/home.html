@@ -1,0 +1,26 @@
+<div class="container">
+	<div class="masthead">
+		<h3 class="text-muted">HATEOAS Explorer</h3>
+	</div>
+</div>
+
+<div class="container">
+	<div class="jumbotron">
+		<h1>Explore your API!</h1>
+		<p>
+			{ <br/>
+			&nbsp;firstname : "John", <br/>
+		  &nbsp;lastname : "Doe",<br/>
+		  &nbsp;links : [ { rel : "self", href : "http://myhost/people" } ] <br/>
+		  } ...
+		</p>
+    <form name="baseForm" ng-submit="submit()" novalidate>
+	    <div class="input-group input-group-lg">
+       	<input type="url" name="baseURL" class="form-control" placeholder="Enter the base URL of your API..." ng-model="url.text" required/>
+    	  <span class="input-group-btn">
+        	<button type="submit" class="btn btn-primary" ng-disabled="baseForm.$invalid"><span class="glyphicon glyphicon-search"/></button>
+      	</span>
+	    </div>
+  	</form>
+	</div>
+</div>
