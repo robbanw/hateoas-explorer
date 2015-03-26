@@ -1,7 +1,6 @@
 <div class="container">
   <div class="masthead">
     <h3 class="text-muted"><a href="" ng-click="explorer.goToHome()">HATEOAS Explorer</a> - {{url}}</h3>
-    <h4 ng-class="explorer.getStatusClass()">Status: {{status}}</h4>
   </div>
 </div>
 
@@ -9,13 +8,16 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <h1 class="text-muted">Response</h1>
+      <h3 ng-class="explorer.getStatusClass()">Status: {{status}}</h3>
       <tabset>
         <tab heading="Parsed">
           <h2 ng-show="explorer.options.arr.length" class="text-muted">What am I allowed to do?</h2>
           <alert ng-show="noActionAlert" type="danger" close="explorer.closeAlert('noActionAlert')">{{noActionAlert}}</alert>
           <alert ng-show="optionsAlert" type="info" close="explorer.closeAlert('optionsAlert')">{{optionsAlert}}</alert>
           <ul ng-show="explorer.options.arr.length" class="list-inline">
-            <li ng-repeat="option in explorer.options.arr"><button ng-click="explorer.getAction(option)" ng-class="explorer.getLabel(option)">{{option}}</button></h2></li>
+            <li ng-repeat="option in explorer.options.arr">
+              <button ng-click="explorer.getAction(option)" ng-class="explorer.getLabel(option)">{{option}}</button>
+            </li>
           </ul>
 
           <h2 class="text-muted">Where to go next?</h2>
@@ -35,7 +37,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr style="cursor: pointer;" ng-repeat="link in data.links" ng-click="explorer.follow(link.href)"><td>{{link.rel}}</td><td>{{link.href}}</td></tr>
+                <tr style="cursor: pointer;" ng-repeat="link in data.links" ng-click="explorer.follow(link.href)">
+                  <td>{{link.rel}}</td>
+                  <td>{{link.href}}</td>
+                </tr>
               </tbody>
             </table>
           </div>
