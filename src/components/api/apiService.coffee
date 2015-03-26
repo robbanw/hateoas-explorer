@@ -2,10 +2,24 @@ class Api extends Service
   constructor: (@$http) ->
 
   get: (url) ->
-    @$http.get(url)
+    @$http.get(url).then(
+      (response) ->
+        response.error = false
+        response
+      (response) ->
+        response.error = true
+        response
+      )
 
   delete: (url) ->
-    @$http.delete(url)
+    @$http.delete(url).then(
+      (response) ->
+        response.error = false
+        response
+      (response) ->
+        response.error = true
+        response
+      )
 
   options: (opurl) ->
     optionsInfo = {}
@@ -14,13 +28,34 @@ class Api extends Service
     optionsInfo
 
   post: (url, body) ->
-    @$http.post(url, body)
+    @$http.post(url, body).then(
+      (response) ->
+        response.error = false
+        response
+      (response) ->
+        response.error = true
+        response
+      )
 
   put: (url, body) ->
-    @$http.put(url, body)
+    @$http.put(url, body).then(
+      (response) ->
+        response.error = false
+        response
+      (response) ->
+        response.error = true
+        response
+      )
 
   patch: (url, body) ->
-    @$http.patch(url, body)
+    @$http.patch(url, body).then(
+      (response) ->
+        response.error = false
+        response
+      (response) ->
+        response.error = true
+        response
+      )
 
 
 

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="masthead">
     <h3 class="text-muted"><a href="" ng-click="explorer.goToHome()">HATEOAS Explorer</a> - {{url}}</h3>
-    <h4 class="text-success">Status: {{status}}</h4>
+    <h4 ng-class="explorer.getStatusClass()">Status: {{status}}</h4>
   </div>
 </div>
 

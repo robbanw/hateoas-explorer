@@ -4,6 +4,7 @@ class Explorer extends Controller
     @putResponseInScope(@$scope, response)
 
   putResponseInScope: (scope, response) ->
+    scope.error = response.error
     scope.status = response.status if response.status
     scope.raw = JSON.stringify(response.data, null, 2)
     if response.headers
@@ -16,6 +17,11 @@ class Explorer extends Controller
         if element isnt 'links' and typeof(response.data[element]) is 'object' and response.data[element]
           @extractLinkedObjs(response.data[element])
 
+  getStatusClass: ->
+    if @$scope.error
+      "text-danger"
+    else
+      "text-success"
 
   follow: (url) ->
     @$location.path('explorer/' + encodeURIComponent(url) + '/GET')
@@ -34,7 +40,7 @@ class Explorer extends Controller
 
   getAction: (option) ->
     switch option
-      when 'GET' then @$route.reload()
+      when 'GET' then @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/GET')
       when 'DELETE' then @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/DELETE')
       when 'POST', 'PUT', 'PATCH' then @openActionModal(option)
       when 'OPTIONS' then @$scope.optionsAlert = "The OPTIONS request for this URL returned the verbs that you see as buttons below"
