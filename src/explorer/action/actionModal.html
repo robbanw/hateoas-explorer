@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{requestType}}</h3>
+</div>
+<div class="modal-body">
+<form>
+    <h4>Request body:</h4>
+    <textarea class="form-control" rows="10" ng-model="request.body"></textarea>
+</form>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="makeRequest()">{{requestType}}</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>
+</div>

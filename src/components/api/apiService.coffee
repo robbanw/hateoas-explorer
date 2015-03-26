@@ -12,3 +12,15 @@ class Api extends Service
     @$http({method: "OPTIONS", url: opurl}).success((data, status, headers, config) ->
       optionsInfo.arr = headers('Allow').replace(/\s/g, '').split(",").sort())
     optionsInfo
+
+  post: (url, body) ->
+    @$http.post(url, body)
+
+  put: (url, body) ->
+    @$http.put(url, body)
+
+  patch: (url, body) ->
+    @$http.patch(url, body)
+
+
+

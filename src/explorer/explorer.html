@@ -19,7 +19,9 @@
           </ul>
 
           <h2 class="text-muted">Where to go next?</h2>
-
+          <alert style="cursor: pointer;" ng-click="explorer.follow(locationHeader)" ng-show="locationHeader" type="info">
+            <strong>Location header field is set to: {{locationHeader}}</strong>
+          </alert>
           <div class="panel panel-default">
             <div class="panel-heading"><strong>Links in the response object</strong></div>
 

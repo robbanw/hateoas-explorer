@@ -1,16 +1,21 @@
 class Explorer extends Controller
-  constructor: (@$scope, @$route, $routeParams, @$location, $modal, response, @options) ->
+  constructor: (@$scope, @$route, $routeParams, @$location, @$modal, response, @options) ->
     @$scope.url = decodeURIComponent($routeParams.url)
-    @$scope.status = response.status if not @$scope.status or overwrite
-    @$scope.data = response.data if not @$scope.data or overwrite
-    @$scope.raw = JSON.stringify(response.data, null, 2)
+    @putResponseInScope(@$scope, response)
+
+  putResponseInScope: (scope, response) ->
+    scope.status = response.status if response.status
+    scope.raw = JSON.stringify(response.data, null, 2)
     if response.headers
-      @$scope.rawHeaders = JSON.stringify(response.headers(), null, 2) if not @$scope.rawHeaders or overwrite
-      @$scope.locationHeader = response.headers('location') if not @$scope.locationHeader or overwrite
-    @$scope.linkedObjs = []
-    for element of response.data
-      if element isnt 'links' and typeof(response.data[element]) is 'object' and response.data[element]
-        @extractLinkedObjs(response.data[element])
+      scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
+      scope.locationHeader = response.headers('location')
+    scope.linkedObjs = []
+    scope.data = response.data
+    if response.data
+      for element of response.data
+        if element isnt 'links' and typeof(response.data[element]) is 'object' and response.data[element]
+          @extractLinkedObjs(response.data[element])
+
 
   follow: (url) ->
     @$location.path('explorer/' + encodeURIComponent(url) + '/GET')
@@ -31,8 +36,25 @@ class Explorer extends Controller
     switch option
       when 'GET' then @$route.reload()
       when 'DELETE' then @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/DELETE')
+      when 'POST', 'PUT', 'PATCH' then @openActionModal(option)
       when 'OPTIONS' then @$scope.optionsAlert = "The OPTIONS request for this URL returned the verbs that you see as buttons below"
       else @$scope.noActionAlert = "HATEOAS Explorer has no action implemented for this verb"
+
+  openActionModal: (option) ->
+    scope = @$scope
+    options =
+      templateUrl: "/explorer/action/actionModal.html",
+      controller: "actionModalController",
+      resolve:
+        requestType: ->
+          option
+        url: ->
+          scope.url
+    modalActionInstance = @$modal.open(options)
+    copyToScope = @putResponseInScope
+    modalActionInstance.result.then((response) ->
+      copyToScope(scope, response)
+      )
 
   closeAlert: (alert) ->
     @$scope[alert] = null
