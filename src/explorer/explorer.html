@@ -12,6 +12,8 @@
       <tabset>
         <tab heading="Parsed">
           <h2 ng-show="explorer.options.arr.length" class="text-muted">What am I allowed to do?</h2>
+          <alert ng-show="noActionAlert" type="danger" close="explorer.closeAlert('noActionAlert')">{{noActionAlert}}</alert>
+          <alert ng-show="optionsAlert" type="info" close="explorer.closeAlert('optionsAlert')">{{optionsAlert}}</alert>
           <ul ng-show="explorer.options.arr.length" class="list-inline">
             <li ng-repeat="option in explorer.options.arr"><button ng-click="explorer.getAction(option)" ng-class="explorer.getLabel(option)">{{option}}</button></h2></li>
           </ul>
@@ -39,16 +41,16 @@
           <div class="panel panel-default">
             <div class="panel-heading"><strong>Linked objects in the response body</strong></div>
 
-            <div ng-show="!explorer.linkedObjs.length" class="panel-body"><p>No linked objects in the response body...</p></div>
+            <div ng-show="!linkedObjs.length" class="panel-body"><p>No linked objects in the response body...</p></div>
 
-            <table ng-show="explorer.linkedObjs.length" class="table table-hover">
+            <table ng-show="linkedObjs.length" class="table table-hover">
               <thead>
                 <tr>
                   <th>URL</th>
                 </tr>
               </thead>
               <tbody>
-                <tr style="cursor: pointer;" ng-repeat="object in explorer.linkedObjs" ng-click="explorer.follow(object.url)" popover-title="Raw object" popover="{{object.raw}}" popover-trigger="mouseenter">
+                <tr style="cursor: pointer;" ng-repeat="object in linkedObjs" ng-click="explorer.follow(object.url)" popover-title="Raw object" popover="{{object.raw}}" popover-trigger="mouseenter">
                   <td>{{object.url}}</td>
                 </tr>
               </tbody>

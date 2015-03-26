@@ -3,4 +3,4 @@ class Home extends Controller
     scripts  = scriptService.get()
     @scripts = (script for script in scripts when script.indexOf('/vendor/') isnt 0)
     $scope.submit = ->
-      $location.path('explorer/' + encodeURIComponent(this.url.text))
+      $location.path('explorer/' + encodeURIComponent(this.url.text) + '/GET')

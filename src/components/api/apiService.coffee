@@ -4,6 +4,9 @@ class Api extends Service
   get: (url) ->
     @$http.get(url)
 
+  delete: (url) ->
+    @$http.delete(url)
+
   options: (opurl) ->
     optionsInfo = {}
     @$http({method: "OPTIONS", url: opurl}).success((data, status, headers, config) ->

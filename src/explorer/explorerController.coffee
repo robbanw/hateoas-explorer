@@ -1,18 +1,19 @@
 class Explorer extends Controller
-  constructor: ($scope, @$route, $routeParams, @$location, response, @options) ->
-    $scope.url = decodeURIComponent($routeParams.url)
-    $scope.status = response.status
-    $scope.data = response.data
-    $scope.raw = JSON.stringify(response.data, null, 2)
-    $scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
-    $scope.locationHeader = response.headers('location')
-    @linkedObjs = []
+  constructor: (@$scope, @$route, $routeParams, @$location, $modal, response, @options) ->
+    @$scope.url = decodeURIComponent($routeParams.url)
+    @$scope.status = response.status if not @$scope.status or overwrite
+    @$scope.data = response.data if not @$scope.data or overwrite
+    @$scope.raw = JSON.stringify(response.data, null, 2)
+    if response.headers
+      @$scope.rawHeaders = JSON.stringify(response.headers(), null, 2) if not @$scope.rawHeaders or overwrite
+      @$scope.locationHeader = response.headers('location') if not @$scope.locationHeader or overwrite
+    @$scope.linkedObjs = []
     for element of response.data
       if element isnt 'links' and typeof(response.data[element]) is 'object' and response.data[element]
         @extractLinkedObjs(response.data[element])
 
   follow: (url) ->
-    @$location.path('explorer/' + encodeURIComponent(url))
+    @$location.path('explorer/' + encodeURIComponent(url) + '/GET')
 
   goToHome: ->
     @$location.path('/')
@@ -29,6 +30,12 @@ class Explorer extends Controller
   getAction: (option) ->
     switch option
       when 'GET' then @$route.reload()
+      when 'DELETE' then @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/DELETE')
+      when 'OPTIONS' then @$scope.optionsAlert = "The OPTIONS request for this URL returned the verbs that you see as buttons below"
+      else @$scope.noActionAlert = "HATEOAS Explorer has no action implemented for this verb"
+
+  closeAlert: (alert) ->
+    @$scope[alert] = null
 
   extractLinkedObjs: (data) ->
     if 'links' of data
@@ -37,7 +44,7 @@ class Explorer extends Controller
       for link in data.links
         if link.rel is 'self'
           linkedObj.url = link.href
-          @linkedObjs.push(linkedObj)
+          @$scope.linkedObjs.push(linkedObj)
           break
     for element of data
       if element isnt 'links' and typeof(data[element]) is 'object' and data[element]
