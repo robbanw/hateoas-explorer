@@ -40,7 +40,11 @@ class Explorer extends Controller
 
   getAction: (option) ->
     switch option
-      when 'GET' then @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/GET')
+      when 'GET'
+        if @$location.path() is '/explorer/' + encodeURIComponent(@$scope.url) + '/GET'
+          @$route.reload()
+        else
+          @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/GET')
       when 'DELETE' then @$location.path('explorer/' + encodeURIComponent(@$scope.url) + '/DELETE')
       when 'POST', 'PUT', 'PATCH' then @openActionModal(option)
       when 'OPTIONS' then @$scope.optionsAlert = "The OPTIONS request for this URL returned the verbs that you see as buttons below"
