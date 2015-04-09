@@ -27,9 +27,9 @@
           <div class="panel panel-default">
             <div class="panel-heading"><strong>Links in the response object</strong></div>
 
-            <div class="panel-body" ng-show="!data.links.length"><p>No links in the response object...</p></div>
+            <div class="panel-body" ng-show="!links.length"><p>No links in the response object...</p></div>
 
-            <table ng-show="data.links.length"  class="table table-hover">
+            <table ng-show="links.length"  class="table table-hover">
               <thead>
                 <tr>
                   <th>Relation</th>
@@ -37,7 +37,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr style="cursor: pointer;" ng-repeat="link in data.links" ng-click="explorer.follow(link.href)">
+                <tr style="cursor: pointer;" ng-repeat="link in links" ng-click="explorer.follow(link.href)">
                   <td>{{link.rel}}</td>
                   <td>{{link.href}}</td>
                 </tr>
@@ -46,7 +46,7 @@
           </div>
 
           <div class="panel panel-default">
-            <div class="panel-heading"><strong>Linked objects in the response body</strong></div>
+            <div class="panel-heading"><strong>Linked resources in the response body</strong></div>
 
             <div ng-show="!linkedObjs.length" class="panel-body"><p>No linked objects in the response body...</p></div>
 

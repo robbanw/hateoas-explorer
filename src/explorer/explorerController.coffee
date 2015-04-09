@@ -11,11 +11,23 @@ class Explorer extends Controller
       scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
       scope.locationHeader = response.headers('location')
     scope.linkedObjs = []
-    scope.data = response.data
+    if 'links' of response.data
+      scope.links = response.data.links
+    else if '_links' of response.data
+      scope.links = @parseHALLinks(response.data._links)
     if response.data
       for element of response.data
-        if element isnt 'links' and typeof(response.data[element]) is 'object' and response.data[element]
+        if element isnt 'links' and element isnt'_links' and typeof(response.data[element]) is 'object' and response.data[element]
           @extractLinkedObjs(response.data[element])
+
+  parseHALLinks: (links) ->
+    HALLinks = []
+    for link of links
+      linkElement = {}
+      linkElement.rel = link
+      linkElement.href = links[link].href
+      HALLinks.push(linkElement)
+    HALLinks
 
   getStatusClass: ->
     if @$scope.error
@@ -71,13 +83,27 @@ class Explorer extends Controller
 
   extractLinkedObjs: (data) ->
     if 'links' of data
-      linkedObj = {}
-      linkedObj.raw = JSON.stringify(data, null, 2)
-      for link in data.links
+      @extractAtomLink(data)
+    else if '_links' of data
+      @extractHalLink(data)
+    for element of data
+      if element isnt 'links' and typeof(data[element]) is 'object' and data[element]
+        @extractLinkedObjs(data[element])
+
+  extractAtomLink: (data) ->
+    linkedObj = {}
+    linkedObj.raw = JSON.stringify(data, null, 2)
+    for link in data.links
         if link.rel is 'self'
           linkedObj.url = link.href
           @$scope.linkedObjs.push(linkedObj)
           break
-    for element of data
-      if element isnt 'links' and typeof(data[element]) is 'object' and data[element]
-        @extractLinkedObjs(data[element])
+
+  extractHalLink: (data) ->
+    linkedObj = {}
+    linkedObj.raw = JSON.stringify(data, null, 2)
+    for link of data._links
+        if link is 'self'
+          linkedObj.url = data._links[link].href
+          @$scope.linkedObjs.push(linkedObj)
+          break
