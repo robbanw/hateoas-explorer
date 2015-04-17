@@ -57,7 +57,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr style="cursor: pointer;" ng-repeat="object in linkedObjs" ng-click="explorer.follow(object.url)" popover-title="Raw object" popover="{{object.raw}}" popover-trigger="mouseenter">
+                <tr style="cursor: pointer;" ng-repeat="object in linkedObjs" ng-click="explorer.follow(object.url)" data-tooltip-html-unsafe="<pre>{{object.raw}}</pre>" tooltip-trigger="mouseenter">
                   <td>{{object.url}}</td>
                 </tr>
               </tbody>
