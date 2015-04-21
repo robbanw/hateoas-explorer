@@ -1,33 +1,24 @@
 class Explorer extends Controller
-  constructor: (@$scope, @$route, $routeParams, @$location, @$modal, response, @options) ->
+  constructor: (@$scope, @$route, $routeParams, @$location, @$modal, response, @options, @linkParser) ->
     @$scope.url = decodeURIComponent($routeParams.url)
-    @putResponseInScope(@$scope, response)
+    @putResponseInScope(response)
 
-  putResponseInScope: (scope, response) ->
-    scope.error = response.error
-    scope.status = response.status if response.status
-    scope.raw = JSON.stringify(response.data, null, 2)
+  putResponseInScope: (response) ->
+    @$scope.error = response.error
+    @$scope.status = response.status if response.status
+    @$scope.raw = JSON.stringify(response.data, null, 2)
     if response.headers
-      scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
-      scope.locationHeader = response.headers('location')
-    scope.linkedObjs = []
+      @$scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
+      @$scope.locationHeader = response.headers('location')
+    @$scope.linkedObjs = []
     if 'links' of response.data
-      scope.links = response.data.links
+      @$scope.links = response.data.links
     else if '_links' of response.data
-      scope.links = @parseHALLinks(response.data._links)
+      @$scope.links = @linkParser.parseHALLinks(response.data._links)
     if response.data
       for element of response.data
         if element isnt 'links' and element isnt'_links' and typeof(response.data[element]) is 'object' and response.data[element]
-          @extractLinkedObjs(response.data[element])
-
-  parseHALLinks: (links) ->
-    HALLinks = []
-    for link of links
-      linkElement = {}
-      linkElement.rel = link
-      linkElement.href = links[link].href
-      HALLinks.push(linkElement)
-    HALLinks
+          @linkParser.extractLinkedObjs(response.data[element], @$scope.linkedObjs)
 
   getStatusClass: ->
     if @$scope.error
@@ -80,30 +71,3 @@ class Explorer extends Controller
 
   closeAlert: (alert) ->
     @$scope[alert] = null
-
-  extractLinkedObjs: (data) ->
-    if 'links' of data
-      @extractAtomLink(data)
-    else if '_links' of data
-      @extractHalLink(data)
-    for element of data
-      if element isnt 'links' and typeof(data[element]) is 'object' and data[element]
-        @extractLinkedObjs(data[element])
-
-  extractAtomLink: (data) ->
-    linkedObj = {}
-    linkedObj.raw = JSON.stringify(data, null, 2)
-    for link in data.links
-        if link.rel is 'self'
-          linkedObj.url = link.href
-          @$scope.linkedObjs.push(linkedObj)
-          break
-
-  extractHalLink: (data) ->
-    linkedObj = {}
-    linkedObj.raw = JSON.stringify(data, null, 2)
-    for link of data._links
-        if link is 'self'
-          linkedObj.url = data._links[link].href
-          @$scope.linkedObjs.push(linkedObj)
-          break

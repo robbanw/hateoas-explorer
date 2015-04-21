@@ -13,4 +13,6 @@ class ExplorerRoutes extends Config
             when 'DELETE' then apiService.delete(decodeURIComponent($route.current.params.url))
         options: ($route, apiService) ->
           apiService.options(decodeURIComponent($route.current.params.url))
+        linkParser: (LinkParser) ->
+          new LinkParser
       }
