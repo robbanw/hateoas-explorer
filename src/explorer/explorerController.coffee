@@ -1,24 +1,24 @@
 class Explorer extends Controller
   constructor: (@$scope, @$route, $routeParams, @$location, @$modal, response, @options, @linkParser) ->
     @$scope.url = decodeURIComponent($routeParams.url)
-    @putResponseInScope(response)
+    @putResponseInScope(@$scope, response)
 
-  putResponseInScope: (response) ->
-    @$scope.error = response.error
-    @$scope.status = response.status if response.status
-    @$scope.raw = JSON.stringify(response.data, null, 2)
+  putResponseInScope: (scope, response) ->
+    scope.error = response.error
+    scope.status = response.status if response.status
+    scope.raw = JSON.stringify(response.data, null, 2)
     if response.headers
-      @$scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
-      @$scope.locationHeader = response.headers('location')
-    @$scope.linkedObjs = []
-    if 'links' of response.data
-      @$scope.links = response.data.links
-    else if '_links' of response.data
-      @$scope.links = @linkParser.parseHALLinks(response.data._links)
+      scope.rawHeaders = JSON.stringify(response.headers(), null, 2)
+      scope.locationHeader = response.headers('location')
+    scope.linkedObjs = []
     if response.data
+      if 'links' of response.data
+        scope.links = response.data.links
+      else if '_links' of response.data
+        scope.links = @linkParser.parseHALLinks(response.data._links)
       for element of response.data
         if element isnt 'links' and element isnt'_links' and typeof(response.data[element]) is 'object' and response.data[element]
-          @linkParser.extractLinkedObjs(response.data[element], @$scope.linkedObjs)
+          @linkParser.extractLinkedObjs(response.data[element], scope.linkedObjs)
 
   getStatusClass: ->
     if @$scope.error
