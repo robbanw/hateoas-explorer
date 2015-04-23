@@ -4,9 +4,11 @@ class Api extends Service
   get: (url) ->
     @$http.get(url).then(
       (response) ->
+        response.url = url
         response.error = false
         response
       (response) ->
+        response.url = url
         response.error = true
         response
       )

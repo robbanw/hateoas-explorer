@@ -1,6 +1,6 @@
 class Explorer extends Controller
-  constructor: (@$scope, @$route, $routeParams, @$location, @$modal, response, @options, @linkParser) ->
-    @$scope.url = decodeURIComponent($routeParams.url)
+  constructor: (@$scope, @$route, @$location, @$modal, response, @options, @linkParser) ->
+    @$scope.url = response.url
     @putResponseInScope(@$scope, response)
 
   putResponseInScope: (scope, response) ->

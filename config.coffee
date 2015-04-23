@@ -17,6 +17,8 @@ BOWER_COMPONENTS =
 		styles:  'dist/css/*.min.css'
 	'angular-bootstrap': '0.12.1':
 		scripts: 'ui-bootstrap-tpls.js'
+	'graphdracula': 'https://github.com/strathausen/dracula.git':
+		scripts: '{lib,vendor}/*.js'
 
 SCRIPTS = [
 	'**/angular.min.js'
@@ -24,6 +26,8 @@ SCRIPTS = [
 	'**/angular-mocks.js'
 	'**/angular-route.min.js'
 	'**/loading-bar.min.js'
+	'**/ui-bootstrap-tpls.js'
+	'**/raphael.js'
 	'**/app.js'
 	'**/*.js'
 ]
