@@ -8,7 +8,7 @@ class LinkParser extends Factory
           else if '_links' of data
             @extractHalLink(data, linkedObjs)
           for element of data
-            if element isnt 'links' and typeof(data[element]) is 'object' and data[element]
+            if element isnt 'links' and element isnt '_links' and typeof(data[element]) is 'object' and data[element]
               @extractLinkedObjs(data[element], linkedObjs)
 
         @extractAtomLink = (data, linkedObjs) ->
